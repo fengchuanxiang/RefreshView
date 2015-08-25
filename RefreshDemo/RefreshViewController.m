@@ -47,10 +47,12 @@
     
     __weak __typeof(self)weakSelf = self;
     
+    //下拉刷新
     headerView = [mTableView addHeaderWithRefreshHandler:^(FCXRefreshBaseView *refreshView) {
         [weakSelf refreshAction];
     }];
     
+    //上拉加载更多
     footerView = [mTableView addFooterWithRefreshHandler:^(FCXRefreshBaseView *refreshView) {
         [weakSelf loadMoreAction];
     }];
