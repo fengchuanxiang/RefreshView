@@ -195,6 +195,7 @@
 
 - (void)showNoMoreData {
     self.refreshState = FCXRefreshStateNoMoreData;
+     _arrowImage.hidden = YES;
 }
 
 - (void)resetNoMoreData {
