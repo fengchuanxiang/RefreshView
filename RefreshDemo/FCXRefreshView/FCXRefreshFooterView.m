@@ -112,7 +112,8 @@
     
     //获取scrollview实际显示内容高度
     CGFloat actualShowHeight = self.scrollView.frame.size.height - _originalEdgeInset.bottom - _originalEdgeInset.top;
-    return self.scrollView.contentOffset.y - (self.scrollView.contentSize.height - actualShowHeight);
+    //MAX防止scrollView的contentSize.height小于显示内容高度
+    return self.scrollView.contentOffset.y - (MAX(self.scrollView.contentSize.height, actualShowHeight) - actualShowHeight);
 }
 
 - (void)setRefreshState:(FCXRefreshState)refreshState {
