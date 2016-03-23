@@ -13,7 +13,6 @@
 @synthesize refreshState = _refreshState;
 
 + (instancetype)footerWithRefreshHandler:(FCXRefreshedHandler)refreshHandler {
-
     FCXRefreshFooterView *footer = [[FCXRefreshFooterView alloc] init];
     footer.refreshHandler = refreshHandler;
     return footer;
@@ -27,7 +26,6 @@
 }
 
 - (void)addRefreshContentView {
-    
     [super addRefreshContentView];
     CGFloat screenWidth = [UIScreen mainScreen].bounds.size.width;
     
@@ -53,7 +51,6 @@
 }
 
 - (void)setAutoLoadMore:(BOOL)autoLoadMore {
-    
     _autoLoadMore = autoLoadMore;
     if (_autoLoadMore) {//自动加载更多不显示箭头
         [_arrowImage removeFromSuperview];
@@ -65,7 +62,6 @@
 }
 
 - (void)scrollViewContentSizeDidChange {
-    
     CGRect frame = self.frame;
     frame.origin.y =  MAX(self.scrollView.frame.size.height, self.scrollView.contentSize.height);
     self.frame = frame;
@@ -73,7 +69,6 @@
 
 
 - (void)scrollViewContentOffsetDidChange {
-
     if (self.refreshState == FCXRefreshStateNoMoreData) {//没有更多数据
         return;
     }
@@ -109,7 +104,6 @@
 
 //超过scrollview的contentSize高度
 - (CGFloat)exceedScrollviewContentSizeHeight {
-    
     //获取scrollview实际显示内容高度
     CGFloat actualShowHeight = self.scrollView.frame.size.height - _originalEdgeInset.bottom - _originalEdgeInset.top;
     //MAX防止scrollView的contentSize.height小于显示内容高度
@@ -117,7 +111,6 @@
 }
 
 - (void)setRefreshState:(FCXRefreshState)refreshState {
-    
     FCXRefreshState lastRefreshState = _refreshState;
 
     if (_refreshState != refreshState) {
@@ -146,7 +139,6 @@
                 
             }
                 break;
-                
             case FCXRefreshStatePulling:
             {
                 _statusLabel.text = self.pullingStateText;
@@ -165,7 +157,6 @@
                 _arrowImage.transform = CGAffineTransformMakeRotation(M_PI);
 
                 [UIView animateWithDuration:0.2 animations:^{
-
                     UIEdgeInsets inset = weakSelf.scrollView.contentInset;
                     inset.bottom += FCXLoadingOffsetHeight;
                     weakSelf.scrollView.contentInset = inset;
@@ -195,8 +186,9 @@
 }
 
 - (void)showNoMoreData {
+    [self endRefresh];
     self.refreshState = FCXRefreshStateNoMoreData;
-     _arrowImage.hidden = YES;
+    _arrowImage.hidden = YES;
 }
 
 - (void)resetNoMoreData {

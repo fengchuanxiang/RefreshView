@@ -13,7 +13,6 @@
 @synthesize refreshState = _refreshState;
 
 + (instancetype)headerWithRefreshHandler:(FCXRefreshedHandler)refreshHandler {
-
     FCXRefreshHeaderView *header = [[FCXRefreshHeaderView alloc] init];
     header.refreshHandler = refreshHandler;
     return header;
@@ -26,7 +25,6 @@
 }
 
 - (void)addRefreshContentView {
-
     [super addRefreshContentView];
     CGFloat screenWidth = [UIScreen mainScreen].bounds.size.width;
 
@@ -62,7 +60,6 @@
 }
 
 - (void)scrollViewContentOffsetDidChange {
-    
     if (self.scrollView.isDragging) {//正在拖拽
         if (self.scrollView.contentOffset.y < -FCXLoadingOffsetHeight) {//大于偏移量，转为pulling
             
@@ -87,7 +84,6 @@
 }
 
 - (void)setRefreshState:(FCXRefreshState)refreshState {
-
     FCXRefreshState lastRefreshState = _refreshState;
     
     if (_refreshState != refreshState) {
@@ -111,7 +107,6 @@
                 }];
             }
                 break;
-                
             case FCXRefreshStatePulling:
             {
                 _statusLabel.text = self.pullingStateText;
@@ -152,7 +147,6 @@
 }
 
 - (void)startRefresh {
-
     __weak __typeof(self)weakSelf = self;
     weakSelf.refreshState = FCXRefreshStateLoading;
 
@@ -163,8 +157,7 @@
     }];
 }
 
-- (void)updateTimeLabelWitLastUpdateTime:(NSDate *)lastUpdateTime
-{
+- (void)updateTimeLabelWitLastUpdateTime:(NSDate *)lastUpdateTime {
     if (!lastUpdateTime){
         _timeLabel.text = @"最后更新：无记录";
         return;

@@ -38,13 +38,13 @@ typedef void(^FCXRefreshedHandler)(FCXRefreshBaseView *refreshView);
     UIEdgeInsets _originalEdgeInset;
 }
 
-@property (nonatomic, weak) UIScrollView *scrollView;//添加刷新的scrollView
-@property (nonatomic, copy) FCXRefreshedHandler refreshHandler;//刷新的相应事件
-@property (nonatomic, unsafe_unretained) FCXRefreshState refreshState;//当前刷新状态
-@property (nonatomic, copy) NSString *normalStateText;//正常状态文本
-@property (nonatomic, copy) NSString *pullingStateText;//下拉状态提示文本
-@property (nonatomic, copy) NSString *loadingStateText;//加载中的提示文本
-@property (nonatomic, copy) NSString *noMoreDataStateText;//没有更多数据提示文本
+@property (nonatomic, weak) UIScrollView *scrollView;//!<添加刷新的scrollView
+@property (nonatomic, copy) FCXRefreshedHandler refreshHandler;//!<刷新的相应事件
+@property (nonatomic, unsafe_unretained) FCXRefreshState refreshState;//!<当前刷新状态
+@property (nonatomic, copy) NSString *normalStateText;//!<正常状态文本
+@property (nonatomic, copy) NSString *pullingStateText;//!<下拉状态提示文本
+@property (nonatomic, copy) NSString *loadingStateText;//!<加载中的提示文本
+@property (nonatomic, copy) NSString *noMoreDataStateText;//!<没有更多数据提示文本
 
 
 
@@ -65,5 +65,9 @@ typedef void(^FCXRefreshedHandler)(FCXRefreshBaseView *refreshView);
 - (void)scrollViewContentOffsetDidChange;
 // 当scrollView的contentSize发生改变的时候调用
 - (void)scrollViewContentSizeDidChange;
+//显示没有更多数据
+- (void)showNoMoreData;
+//重置没有更多的数据（消除没有更多数据的状态）
+- (void)resetNoMoreData;
 
 @end

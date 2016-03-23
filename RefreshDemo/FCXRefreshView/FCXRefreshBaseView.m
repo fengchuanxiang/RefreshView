@@ -12,22 +12,18 @@
 @implementation FCXRefreshBaseView
 
 
-- (void)removeFromSuperview
-{
+- (void)removeFromSuperview {
     [self.superview removeObserver:self forKeyPath:@"contentOffset" context:nil];
     [self.superview removeObserver:self forKeyPath:@"contentSize" context:nil];
 
     [super removeFromSuperview];
-
 }
 
-- (void)willMoveToSuperview:(UIView *)newSuperview
-{
+- (void)willMoveToSuperview:(UIView *)newSuperview {
     [super willMoveToSuperview:newSuperview];
 }
 
 - (instancetype)init {
-
     if (self = [super init]) {
         [self setStateText];
         [self addRefreshContentView];
@@ -37,7 +33,6 @@
 }
 
 - (void)addRefreshContentView {
-    
     CGFloat screenWidth = [UIScreen mainScreen].bounds.size.width;
     self.frame = CGRectMake(0, -FCXLoadingOffsetHeight, screenWidth, FCXLoadingOffsetHeight);
     self.backgroundColor = [UIColor clearColor];
@@ -48,7 +43,6 @@
 - (void)setStateText {}
 
 - (void)setScrollView:(UIScrollView *)scrollView {
-
     if (_scrollView != scrollView) {
         _originalEdgeInset = scrollView.contentInset;
         [_scrollView removeObserver:self forKeyPath:@"contentOffset" context:nil];
@@ -62,7 +56,6 @@
 }
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
-
     //正在刷新
     if (self.refreshState == FCXRefreshStateLoading) {
         return;
@@ -78,13 +71,12 @@
 - (void)scrollViewContentOffsetDidChange {}
 - (void)scrollViewContentSizeDidChange {}
 
-- (void)startRefresh {
-
-}
-
+- (void)startRefresh {}
 - (void)endRefresh {
-
     self.refreshState = FCXRefreshStateNormal;
 }
+
+- (void)showNoMoreData {}
+- (void)resetNoMoreData {}
 
 @end
