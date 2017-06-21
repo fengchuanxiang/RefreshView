@@ -92,9 +92,4 @@ static NSString *const FCXRefreshCellReuseID = @"FCXRefreshCellReuseID";
     return cell;
 }
 
-- (void)dealloc {
-    [_headerView removeScrollViewObservers];
-    [_footerView removeScrollViewObservers];
-}
-
 @end
