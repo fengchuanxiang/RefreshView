@@ -9,6 +9,8 @@
 #import "ViewController.h"
 #import "RefreshViewController.h"
 
+static NSString *const CellReuseID = @"CellReuseID";
+
 @interface ViewController () <UITableViewDelegate, UITableViewDataSource>
 
 
@@ -24,6 +26,7 @@
     tableView.delegate = self;
     tableView.dataSource = self;
     tableView.rowHeight = 60;
+    [tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:CellReuseID];
     [self.view addSubview:tableView];
 }
 
@@ -32,13 +35,7 @@
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    
-    static NSString *cellIdentifier = @"cellIdentifier";
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
-    if (!cell) {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
-        
-    }
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellReuseID forIndexPath:indexPath];
     
     if (indexPath.row == 0) {
         cell.textLabel.text = @"主动上拉加载";
@@ -49,15 +46,12 @@
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-
     [tableView deselectRowAtIndexPath:indexPath animated:NO];
     
     RefreshViewController *refreshVC = [[RefreshViewController alloc] init];
-    
     if (indexPath.row == 1) {
         refreshVC.autoLoadMore = YES;
     }
-    
     [self.navigationController pushViewController:refreshVC animated:YES];
 }
 

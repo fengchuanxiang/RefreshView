@@ -11,12 +11,14 @@
 #import "FCXRefreshHeaderView.h"
 #import "UIScrollView+FCXRefresh.h"
 
+static NSString *const FCXRefreshCellReuseID = @"FCXRefreshCellReuseID";
+
 @interface RefreshViewController ()<UITableViewDelegate, UITableViewDataSource>
 {
-    NSInteger rows;
-    UITableView *mTableView;
-    FCXRefreshHeaderView *headerView;
-    FCXRefreshFooterView *footerView;
+    NSInteger _rows;
+    UITableView *_tableView;
+    FCXRefreshHeaderView *_headerView;
+    FCXRefreshFooterView *_footerView;
 }
 
 
@@ -27,80 +29,72 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.view.backgroundColor = [UIColor whiteColor];
-    if ([self respondsToSelector:@selector(automaticallyAdjustsScrollViewInsets)])
-    {
+    if ([self respondsToSelector:@selector(automaticallyAdjustsScrollViewInsets)]) {
         self.automaticallyAdjustsScrollViewInsets = NO;
     }
     self.title = @"上下拉刷新";
     
-    rows = 12;
-    mTableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 64, self.view.frame.size.height, [UIScreen mainScreen].bounds.size.height - 64) style:UITableViewStylePlain];
-    mTableView.delegate = self;
-    mTableView.dataSource = self;
-    mTableView.rowHeight = 60;
-    [self.view addSubview:mTableView];
+    _rows = 12;
+    _tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 64, self.view.frame.size.height, [UIScreen mainScreen].bounds.size.height - 64) style:UITableViewStylePlain];
+    _tableView.delegate = self;
+    _tableView.dataSource = self;
+    _tableView.rowHeight = 60;
+    [_tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:FCXRefreshCellReuseID];
+    [self.view addSubview:_tableView];
     
     [self addRefreshView];
 }
 
 - (void)addRefreshView {
-    
     __weak __typeof(self)weakSelf = self;
     
     //下拉刷新
-    headerView = [mTableView addHeaderWithRefreshHandler:^(FCXRefreshBaseView *refreshView) {
+    _headerView = [_tableView addHeaderWithRefreshHandler:^(FCXRefreshBaseView *refreshView) {
         [weakSelf refreshAction];
     }];
     
     //上拉加载更多
-    footerView = [mTableView addFooterWithRefreshHandler:^(FCXRefreshBaseView *refreshView) {
+    _footerView = [_tableView addFooterWithRefreshHandler:^(FCXRefreshBaseView *refreshView) {
         [weakSelf loadMoreAction];
     }];
     
     //自动刷新
-    footerView.autoLoadMore = self.autoLoadMore;
+    _footerView.autoLoadMore = self.autoLoadMore;
 }
 
 - (void)refreshAction {
-    __weak UITableView *weakTableView = mTableView;
-    __weak FCXRefreshHeaderView *weakHeaderView = headerView;
-    
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        rows = 12;
-        [weakTableView reloadData];
-        [weakHeaderView endRefresh];
+        _rows = 12;
+        [_tableView reloadData];
+        [_headerView endRefresh];
     });
 }
 
 - (void)loadMoreAction {
-    __weak UITableView *weakTableView = mTableView;
-    __weak FCXRefreshFooterView *weakFooterView = footerView;
-    
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        rows += 12;
-        [weakTableView reloadData];
-        if (rows > 24) {
-            [weakFooterView showNoMoreData];
+        _rows += 12;
+        [_tableView reloadData];
+        if (_rows > 24) {
+            [_footerView showNoMoreData];
         }else {
-            [weakFooterView endRefresh];
+            [_footerView endRefresh];
         }
     });
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return rows;
+    return _rows;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    
-    static NSString *cellIdentifier = @"cellIdentifier";
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
-    if (!cell) {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
-    }
-    
-    cell.textLabel.text = [NSString stringWithFormat:@"%d", indexPath.row + 1];
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:FCXRefreshCellReuseID forIndexPath:indexPath];
+       cell.textLabel.text = [NSString stringWithFormat:@"%ld", indexPath.row + 1];
     return cell;
+}
+
+- (void)dealloc {
+    [_headerView removeScrollViewObservers];
+    [_footerView removeScrollViewObservers];
 }
 
 @end
